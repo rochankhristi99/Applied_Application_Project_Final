@@ -74,7 +74,7 @@ public class LineFollower extends Thread {
             	 detectionCount++; // Increment detection count
                  LCD.drawString("Count: " + detectionCount, 0, 2);
                  
-                 if (detectionCount >= 4) {
+                 if (detectionCount >= 2) {
                      DEObj.setCMD(3); 
                      stopRobot();
                      break;
