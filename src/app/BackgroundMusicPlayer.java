@@ -2,24 +2,40 @@ package app;
 
 import lejos.hardware.Sound;
 
+/**
+ * The BackgroundMusicPlayer class handles playing background music using the LeJOS Sound API.
+ * It extends Thread to allow playing music in a separate thread.
+ */
 public class BackgroundMusicPlayer extends Thread {
-    private static final int[] NOTES = {392, 392, 440, 392, 349, 330, 294}; // Example notes
-    private static final int[] DURATIONS = {400, 200, 400, 400, 400, 400, 800}; // Note durations (milliseconds)
-    private volatile boolean keepPlaying = true; // Flag to control music playback
+    // Arrays storing music notes and their durations
+    private int[] NOTES = {440, 493, 392, 392, 493, 493, 493, 493, 493, 493, 493, 493, 392, 392, 440, 440, 440, 440, 440, 440};
+    private int[] DURATIONS = {200, 200, 300, 300, 200, 100, 100, 200, 200, 200, 200, 200, 300, 300, 200, 100, 100, 200, 200, 200};
 
+    // Flag to control music
+    private volatile boolean keepPlaying = true;
+
+    /**
+     * The run method runs the music loop until keepPlaying is set to false.
+     */
     public void run() {
-        Sound.setVolume(10); // Adjust volume as needed
+        // Set the volume for playing music
+        Sound.setVolume(10);
 
-        // Play the melody continuously until instructed to stop
+        // Music loop
         while (keepPlaying) {
+            // Play each note with its corresponding duration
             for (int i = 0; i < NOTES.length && keepPlaying; i++) {
                 Sound.playTone(NOTES[i], DURATIONS[i]);
             }
         }
     }
 
-    // Method to stop the music playback
+    /**
+     * Stops the background music..
+     */
     public void stopMusic() {
+        // Set keepPlaying flag to false to stop music
         keepPlaying = false;
     }
+    
 }

@@ -1,71 +1,52 @@
 package app;
-import java.io.File;
 
 import lejos.hardware.Button;
 import lejos.hardware.Sound;
-import lejos.hardware.lcd.LCD;
-import lejos.utility.Stopwatch;
 
+/**
+ * The main class to control the execution flow of the application.
+ */
 public class Main {
     private static DataExchange DE;
     private static LineFollower LFObj;
     private static ObstacleDetector ODObj;
-    //private static Stopwatch stopwatch;
+    private static ColorSensor colorSensor;
+    private static MotorController motorController;
 
+    /**
+     * The main method to start the application.
+     * @param args The command line arguments (not used).
+     */
+    
     public static void main(String[] args) {
 
-        System.out.println("Let's Start...");
+        System.out.println("Let's Begin...");
         Sound.beepSequenceUp();   
         Button.waitForAnyPress();
         Button.LEDPattern(4);  
 
-        // Start a thread to play the music
-        Thread musicThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                
-            }
-        });
-        musicThread.start();
-
+        // Initialize data exchange, obstacle detector, line follower, color sensor, and motor controller
         DE = new DataExchange();
         ODObj = new ObstacleDetector(DE);
         LFObj = new LineFollower(DE);
-  //      stopwatch = new Stopwatch();
-
+        colorSensor = new ColorSensor();
+        motorController = new MotorController();
+     
+        // Start obstacle detector, line follower, color sensor, and motor controller threads
         ODObj.start();
         LFObj.start();
-
+        colorSensor.start();
+        motorController.start();
         
-     /*   while (true) {
-            if (Button.DOWN.isDown()) {
-                // Stop the robot
-                LFObj.stopRobot();
-                
-                // Get the elapsed time
-                long elapsedTime = stopwatch.elapsed();
-
-                // Display the total time on the LCD
-                LCD.clear();
-                LCD.drawString("Total Time: " + elapsedTime / 1000 + " sec", 0, 0);
-
-                break; // Exit the loop
-            }
-        }*/
-        
-           
-        while (Button.ENTER.isDown()) { // Continue until the down button is pressed
-        	//LFObj.stopRobot();
+        // Wait for the ENTER button to be pressed to exit the program
+        while (Button.ENTER.isDown()) { 
            System.exit(0);
         }
-
-        // Get the elapsed time
-       // long elapsedTime = stopwatch.elapsed();
-
-        // Display the total time on the LCD
-      //  LCD.clear();
-      //  LCD.drawString("Total Time: " + elapsedTime / 1000 + " sec", 0, 0);
-     
+        
+        // Interrupt threads to stop them gracefully
+        ODObj.interrupt();
+        LFObj.interrupt();
+        colorSensor.interrupt();
+        motorController.interrupt();
     }
-   
 }
